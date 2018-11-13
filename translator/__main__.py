@@ -1,19 +1,23 @@
-from .translator_class import *
-import sys
+from .translator_class import PropertyTranslator
 import argparse
 
 
 def main():
     args = vars(parse_arguments())
-    gather_english_phrases_from_files(args['input_directory'], args['file_path_from'])
-    eng_pl = create_dictionary_from_file(file_path_from=args['file_path_from'], file_path_to=args['file_path_to'],
-                                         trans_from=args['trans_from'], trans_to=args['trans_to'])
-    translate_files(directory=args['input_directory'], dictionary=eng_pl,
-                    trans_from=args['trans_from'], trans_to=args['trans_to'])
+    action = args.pop('action')
+    translator = PropertyTranslator(**args)
+    if action is None:
+        translator.gather_english_phrases_from_files()
+        translator.create_dictionary_from_file()
+        translator.translate_files()
+    elif action == "translate":
+        translator.create_dictionary_from_file()
+        translator.translate_files()
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--action", "-a", help="action to take", type=str)
     parser.add_argument("--input_directory", "-i", help="input directory path", type=str)
     parser.add_argument("--file_path_from_trans", "-pf", help="input dictionary path", type=str)
     parser.add_argument("--file_path_to_trans", "-pt", help="output dictionary path", type=str)
@@ -25,7 +29,3 @@ def parse_arguments():
 
 if __name__ == '__main__':
     main()
-    gather_english_phrases_from_files('translations', 'english_phrases_new.csv')
-    eng_pl = create_dictionary_from_file(file_path_from='english_phrases.csv', file_path_to='polish_phrases.csv',
-                                         trans_from='ENG', trans_to='PL')
-    translate_files(directory='translations', dictionary=eng_pl, trans_from='ENG', trans_to='PL')

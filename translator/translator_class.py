@@ -14,6 +14,7 @@ class PropertyTranslator:
         self.file_path_to = file_path_to_trans or 'polish_phrases.csv'
         self.trans_from = trans_from or 'ENG'
         self.trans_to = trans_to or 'PL'
+        self.dictionary = None
 
     @staticmethod
     def compile_lines_from_file(file_path):
@@ -43,7 +44,7 @@ class PropertyTranslator:
         phrases = []
         for filename in os.listdir(self.input_directory):
             if '_pl' not in filename:
-                print(filename)
+                #print(filename)
                 phrases += self.gather_english_phrases(self.input_directory + '/' + filename)
         phrases = list(OrderedDict.fromkeys(phrases))
 
@@ -79,13 +80,14 @@ class PropertyTranslator:
         my_list.insert(0, my_list.pop(my_list.index(elem)))
 
     def create_dictionary_from_file(self):
-        df1 = pd.read_csv(self.file_path_from, encoding='utf-8', header=None, names=[self.trans_from], sep=';')
+        df1 = pd.read_csv('english_phrases.csv', encoding='utf-8', header=None, names=[self.trans_from], sep=';')
         df2 = pd.read_csv(self.file_path_to, encoding='utf-8', header=None, names=[self.trans_to], sep=';')
         df = pd.concat([df1, df2], axis=1, sort=False)
+        self.dictionary = df
         #print(df)
         return df
 
-    def translate_file(self, file_path, translated_file_path, dictionary):
+    def translate_file(self, file_path, translated_file_path):
         with open(translated_file_path, 'w', encoding='utf-8') as new_file:
             lines = self.compile_lines_from_file(file_path)
             for line in lines:
@@ -94,7 +96,7 @@ class PropertyTranslator:
                     label = phrase[0]
                     value = "=".join(phrase[1:])
                     swap = self.swap_aliases(value).strip()
-                    translations = dictionary[dictionary[self.trans_from] == swap][self.trans_to].values
+                    translations = self.dictionary[self.dictionary[self.trans_from] == swap][self.trans_to].values
                     if value:
                         if len(translations) != 0:
                             #print(swap, translations)
@@ -108,7 +110,7 @@ class PropertyTranslator:
                 else:
                     new_file.write(f'{line}\n')
 
-    def translate_files(self, dictionary):
+    def translate_files(self):
         for filename in os.listdir(self.input_directory):
             if '_pl' not in filename:
                 file_path_from = self.input_directory + '/' + filename
@@ -117,6 +119,6 @@ class PropertyTranslator:
                 new_filename += '_pl.properties'
                 print(new_filename)
                 file_path_to = self.input_directory + '/' + new_filename
-                self.translate_file(file_path_from, file_path_to, dictionary)
+                self.translate_file(file_path_from, file_path_to)
 
 
