@@ -1,0 +1,10 @@
+*.json
+*.properties
+*.txt
+!requirements.txt
+*.log
+*.csv
+venv
+.idea
+*.xlsm
+__pycache__/
