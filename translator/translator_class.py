@@ -44,7 +44,7 @@ class PropertyTranslator:
         phrases = []
         for filename in os.listdir(self.input_directory):
             if '_pl' not in filename:
-                #print(filename)
+                print(filename)
                 phrases += self.gather_english_phrases(self.input_directory + '/' + filename)
         phrases = list(OrderedDict.fromkeys(phrases))
 
@@ -79,12 +79,12 @@ class PropertyTranslator:
     def move_element_to_front(elem, my_list):
         my_list.insert(0, my_list.pop(my_list.index(elem)))
 
+    # zamienić 'english_phrases.csv' na 'self.file_path_from'
     def create_dictionary_from_file(self):
         df1 = pd.read_csv('english_phrases.csv', encoding='utf-8', header=None, names=[self.trans_from], sep=';')
         df2 = pd.read_csv(self.file_path_to, encoding='utf-8', header=None, names=[self.trans_to], sep=';')
         df = pd.concat([df1, df2], axis=1, sort=False)
         self.dictionary = df
-        #print(df)
         return df
 
     def translate_file(self, file_path, translated_file_path):
@@ -96,11 +96,9 @@ class PropertyTranslator:
                     label = phrase[0]
                     value = "=".join(phrase[1:])
                     swap = self.swap_aliases(value).strip()
-                    print(swap)
                     translations = self.dictionary[self.dictionary[self.trans_from] == swap][self.trans_to].values
                     if value:
                         if len(translations) != 0:
-                            #print(swap, translations)
                             translation_to_print = translations[0].replace("\\ ", "\\\n").replace("\\\t", "\\\n\t")
                             new_file.write(f'{label}={translation_to_print}\n')
                         else:

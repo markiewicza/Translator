@@ -10,7 +10,7 @@ def main():
         translator.gather_english_phrases_from_files()
         translator.create_dictionary_from_file()
         translator.translate_files()
-    elif action == "translate":
+    elif action == "only translate":
         translator.create_dictionary_from_file()
         translator.translate_files()
 
