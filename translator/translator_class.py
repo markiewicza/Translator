@@ -96,6 +96,7 @@ class PropertyTranslator:
                     label = phrase[0]
                     value = "=".join(phrase[1:])
                     swap = self.swap_aliases(value).strip()
+                    print(swap)
                     translations = self.dictionary[self.dictionary[self.trans_from] == swap][self.trans_to].values
                     if value:
                         if len(translations) != 0:
