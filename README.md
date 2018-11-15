@@ -106,3 +106,8 @@ Wszystkie niewypełnione argumenty przyjmują wartości domyślne.
 
 Zarówno plik wejściowy jak i wyjściowy do słownika mają format csv i powinny zawierać wszystkie dane w jednej kolumnie,
 bezpośrednio pod sobą.
+
+### Wykorzystane technologie
+
+* [Python](https://www.python.org/)
+* [Pandas](https://pandas.pydata.org/)
